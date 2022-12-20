@@ -38,6 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     
     def iniciar(self):
+        '''Inicia a leitura de dados da porta serial.'''
         if self._flag:
             msg = QtWidgets.QMessageBox()
             msg.setWindowIcon(QtGui.QIcon('./icon.png'))
@@ -51,6 +52,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._threadCSV.start()
 
     def encerrar(self):
+        '''Encerra a leitura de dados da porta serial.'''
         if not self._flag:
             msg = QtWidgets.QMessageBox()
             msg.setWindowIcon(QtGui.QIcon('./icon.png'))
@@ -63,13 +65,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self._threadCSV.join()
         self.labeltemp.setText('0.0 °C')
 
-    def closeEvent(self, event) -> None:
-        if self._flag:
-            self._flag = False
-            self._threadCSV.join()
-        event.accept()
-
     def leitura(self):
+        '''Leitura de dados da porta serial. Converte o sinal digital lido em temperatura em °C.'''
         with open('./dados.csv', "w") as file:
             s = serial.Serial("COM3", 1000000)
             file.write('Tempo(us);Tempo(ms);Valor\r')
@@ -77,6 +74,17 @@ class MainWindow(QtWidgets.QMainWindow):
                 linha = s.readline().decode().replace('\n', '')
                 file.write(linha)
                 try:
-                    self.labeltemp.setText(f'{round(int(linha.split(";")[2])*0.322265625, 1)} °C') #constante levando em conta 1024 == 3,3V
+                    # Constante de conversão leitura ADC para °C:
+                    # 1024 == 3,0V -> utilizar 0.29296875
+                    # 1024 == 3,1V -> utilizar 0.302734375
+                    # 1024 == 3,2V -> utilizar 0.3125
+                    # 1024 == 3,3V -> utilizar 0.322265625
+                    self.labeltemp.setText(f'{round(int(linha.split(";")[2])*0.322265625, 1)} °C')
                 except Exception as e:
                     print(e)
+
+    def closeEvent(self, event) -> None:
+        if self._flag:
+            self._flag = False
+            self._threadCSV.join()
+        event.accept()
