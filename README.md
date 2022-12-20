@@ -19,3 +19,7 @@ python -m venv '.venv'
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
+Para executar o app, execute o seguinte comando:
+```
+python main.py
+```
