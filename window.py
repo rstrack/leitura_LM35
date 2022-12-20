@@ -2,6 +2,7 @@ from threading import Thread
 from PyQt6 import QtWidgets, QtCore, QtGui
 import os
 import serial
+from datetime import datetime
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -67,19 +68,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def leitura(self):
         '''Leitura de dados da porta serial. Converte o sinal digital lido em temperatura em °C.'''
-        with open('./dados.csv', "w") as file:
-            s = serial.Serial("COM3", 1000000)
-            file.write('Tempo(us);Tempo(ms);Valor\r')
+        with open('./dados.csv', "w") as file, serial.Serial("COM3", 1000000) as s:
+            file.write('Data;Tempo (us);Tempo (ms);Temperatura (°C)\r')
             while(self._flag):
-                linha = s.readline().decode().replace('\n', '')
-                file.write(linha)
                 try:
+                    linha = s.readline().decode().replace('\n', '').split(';')
+                    temp = round(int(linha[2])*0.322265625, 1)
+                    linha = f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')};{linha[0]};{linha[1]};{str(temp).replace('.', ',', 1)}\r"
+                    file.write(linha)
                     # Constante de conversão leitura ADC para °C:
                     # 1024 == 3,0V -> utilizar 0.29296875
                     # 1024 == 3,1V -> utilizar 0.302734375
                     # 1024 == 3,2V -> utilizar 0.3125
                     # 1024 == 3,3V -> utilizar 0.322265625
-                    self.labeltemp.setText(f'{round(int(linha.split(";")[2])*0.322265625, 1)} °C')
+                    self.labeltemp.setText(f'{temp} °C')
                 except Exception as e:
                     print(e)
 
