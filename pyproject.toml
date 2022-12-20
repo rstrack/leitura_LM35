@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "leitura-lm35"
+version = "0.1.0"
+description = "App para leitura de um sensor LM35 a partir de uma porta serial"
+authors = ["Rafael Strack <strackinado@gmail.com>"]
+readme = "README.md"
+packages = [{include = "leitura_lm35"}]
+
+[tool.poetry.dependencies]
+python = "3.11"
+pyqt6 = "^6.4.0"
+pyserial = "^3.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

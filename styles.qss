@@ -1,0 +1,30 @@
+*{
+    font-family: 'calibri', 'sans-serif';
+    font-size: 18px;
+
+}
+
+QLabel#leitura{
+    font-size: 32px;
+    font-weight: bold;
+}
+
+QFrame{
+    background-color: #f0f0f0;
+    /* border: 1px solid black; */
+}
+
+QPushButton{
+    background-color: #207246;
+    color: #fefefe;
+    font-weight: bold;
+}
+
+QMainWindow QPushButton{
+    font-size: 26px;
+    padding: 10px;
+}
+
+QPushButton:hover{
+    background-color: #0e5d2e;
+}
