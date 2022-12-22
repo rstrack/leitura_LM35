@@ -9,7 +9,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
         self._flag = False
         self.setWindowTitle('Leitura LM35')
-        self.setWindowIcon(QtGui.QIcon('./icon.png'))
+        self.setWindowIcon(QtGui.QIcon('./resources/icon.png'))
         self.resize(400, 400)
         self.mainframe = QtWidgets.QFrame(self)
         self.vlayout = QtWidgets.QVBoxLayout(self.mainframe)
@@ -68,22 +68,24 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def leitura(self):
         '''Leitura de dados da porta serial. Converte o sinal digital lido em temperatura em °C.'''
-        with open('./dados.csv', "w") as file, serial.Serial("COM3", 1000000) as s:
+        with open('./dados.csv', "w") as file, serial.Serial("COM3", 115200) as s:
             file.write('Data;Tempo (us);Tempo (ms);Temperatura (°C)\r')
             while(self._flag):
                 try:
                     linha = s.readline().decode().replace('\n', '').split(';')
-                    temp = round(int(linha[2])*0.322265625, 1)
+                    temp = round(int(linha[2])*0.302734375, 1)
                     linha = f"{datetime.now().strftime('%d/%m/%Y %H:%M:%S')};{linha[0]};{linha[1]};{str(temp).replace('.', ',', 1)}\r"
                     file.write(linha)
                     # Constante de conversão leitura ADC para °C:
                     # 1024 == 3,0V -> utilizar 0.29296875
                     # 1024 == 3,1V -> utilizar 0.302734375
+                    # 1024 == 3,15V -> utilizar 0.307617188
                     # 1024 == 3,2V -> utilizar 0.3125
                     # 1024 == 3,3V -> utilizar 0.322265625
                     self.labeltemp.setText(f'{temp} °C')
                 except Exception as e:
-                    print(e)
+                    # print(e)
+                    pass
 
     def closeEvent(self, event) -> None:
         if self._flag:

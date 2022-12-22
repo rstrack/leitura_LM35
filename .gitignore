@@ -1,5 +1,2 @@
-/__pycache__
-/.venv
-
-poetry.lock
-dados.csv
+/src/__pycache__
+/src/.venv

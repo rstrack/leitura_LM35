@@ -7,7 +7,7 @@ class Main():
     def __init__(self) -> None:
         self.app = QtWidgets.QApplication(sys.argv)
         self.app.setStyle("Fusion")
-        style = open("./styles.qss").read()
+        style = open("./resources/styles.qss").read()
         self.app.setStyleSheet(style)
 
     def run(self):

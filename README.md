@@ -15,6 +15,7 @@ App em Python para análise de temperatura utilizando o sensor LM35 conectado ao
 ## :rocket: Rodando o projeto
 Para rodar o repositório é necessário cloná-lo e executar os seguintes comandos para iniciar o projeto:
 ```
+cd ./src
 python -m venv '.venv'
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
